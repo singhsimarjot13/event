@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+{% block title %}Quiz Results - ITian Club{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <!-- Success Header -->
+    <div class="glass-card fade-in-up mb-4">
+        <div class="text-center">
+            <div class="success-icon mb-3">
+                <i class="fas fa-check-circle fa-3x text-success"></i>
+            </div>
+            <h1 class="display-4 fw-bold mb-3">Congratulations, {{ name }}!</h1>
+            <p class="lead">Your quiz has been successfully submitted. Here's your performance summary.</p>
+        </div>
+    </div>
+
+    <!-- Score Display -->
+    <div class="glass-card reveal mb-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="score-display">
+                    <h2 class="mb-3">Your Total Score</h2>
+                    <div class="score-circle">
+                        <div class="score-number">{{ score }}</div>
+                        <div class="score-max">/ 6</div>
+                    </div>
+                    <div class="score-percentage">
+                        {{ "%.1f"|format((score / 6) * 100) }}%
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="score-details">
+                    <h4 class="mb-3">Performance Breakdown</h4>
+                    <div class="performance-item">
+                        <div class="performance-label">
+                            <i class="fas fa-calculator me-2"></i>Mathematics
+                        </div>
+                        <div class="performance-score">
+                            <span class="score-badge">{{ score if score <= 2 else 2 }}</span>
+                        </div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">
+                            <i class="fas fa-brain me-2"></i>Reasoning
+                        </div>
+                        <div class="performance-score">
+                            <span class="score-badge">{{ score if score <= 2 else 2 }}</span>
+                        </div>
+                    </div>
+                    <div class="performance-item">
+                        <div class="performance-label">
+                            <i class="fas fa-language me-2"></i>Verbal
+                        </div>
+                        <div class="performance-score">
+                            <span class="score-badge">{{ score if score <= 2 else 2 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Badge -->
+    <div class="glass-card reveal mb-4">
+        <div class="text-center">
+            <h3 class="mb-4">Achievement Unlocked!</h3>
+            <div class="achievement-badge">
+                {% if score >= 5 %}
+                    <i class="fas fa-crown fa-2x text-warning"></i>
+                    <h4 class="mt-2">Quiz Master</h4>
+                    <p class="text-muted">Outstanding performance!</p>
+                {% elif score >= 4 %}
+                    <i class="fas fa-star fa-2x text-warning"></i>
+                    <h4 class="mt-2">High Achiever</h4>
+                    <p class="text-muted">Excellent work!</p>
+                {% elif score >= 3 %}
+                    <i class="fas fa-medal fa-2x text-warning"></i>
+                    <h4 class="mt-2">Good Performer</h4>
+                    <p class="text-muted">Well done!</p>
+                {% else %}
+                    <i class="fas fa-thumbs-up fa-2x text-warning"></i>
+                    <h4 class="mt-2">Participant</h4>
+                    <p class="text-muted">Keep practicing!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Analysis -->
+    <div class="glass-card reveal mb-4">
+        <h3 class="text-center mb-4">Performance Analysis</h3>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="analysis-card">
+                    <div class="analysis-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Overall Performance</h5>
+                    <p>
+                        {% if score >= 5 %}
+                            You've demonstrated exceptional aptitude skills across all categories. Your analytical thinking and problem-solving abilities are outstanding!
+                        {% elif score >= 4 %}
+                            You've shown strong aptitude skills with room for improvement. Your performance indicates good potential for growth.
+                        {% elif score >= 3 %}
+                            You've achieved a satisfactory performance. With practice, you can significantly improve your scores.
+                        {% else %}
+                            This assessment shows areas for improvement. Focus on strengthening your foundational skills.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="analysis-card">
+                    <div class="analysis-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h5>Recommendations</h5>
+                    <p>
+                        {% if score >= 5 %}
+                            Consider advanced aptitude training and competitive exams. You're ready for challenging assessments!
+                        {% elif score >= 4 %}
+                            Focus on time management and practice more complex problems to reach the next level.
+                        {% elif score >= 3 %}
+                            Regular practice with aptitude questions will help improve your performance significantly.
+                        {% else %}
+                            Start with basic aptitude concepts and gradually build up to more complex problems.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="glass-card reveal text-center">
+        <h3 class="mb-4">What's Next?</h3>
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            <form method="POST" action="{{ url_for('send_quiz_email') }}" class="d-inline">
+                <button type="submit" class="btn btn-premium btn-lg px-5">
+                    <i class="fas fa-envelope me-2"></i>
+                    Get Detailed Report
+                </button>
+            </form>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-light btn-lg px-5">
+                <i class="fas fa-home me-2"></i>
+                Back to Home
+            </a>
+        </div>
+        
+        <!-- Social Sharing -->
+        <div class="social-sharing mt-4">
+            <p class="text-muted mb-3">Share your achievement:</p>
+            <div class="d-flex gap-2 justify-content-center">
+                <a href="#" class="social-btn facebook" onclick="shareToFacebook()">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-btn twitter" onclick="shareToTwitter()">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-btn linkedin" onclick="shareToLinkedIn()">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="social-btn whatsapp" onclick="shareToWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .results-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .success-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin: 0 auto;
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .score-display {
+        text-align: center;
+    }
+    
+    .score-circle {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .score-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: white;
+        line-height: 1;
+    }
+    
+    .score-max {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: -0.5rem;
+    }
+    
+    .score-percentage {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-blue);
+    }
+    
+    .performance-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .performance-item:last-child {
+        border-bottom: none;
+    }
+    
+    .performance-label {
+        color: white;
+        font-weight: 500;
+    }
+    
+    .score-badge {
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+    
+    .achievement-badge {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 2px solid rgba(255, 193, 7, 0.3);
+    }
+    
+    .analysis-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 1.5rem;
+        height: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .analysis-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .analysis-card h5 {
+        color: white;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .analysis-card p {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        margin-bottom: 0;
+    }
+    
+    .social-sharing {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 2rem;
+    }
+    
+    .social-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+    }
+    
+    .social-btn:hover {
+        transform: translateY(-3px);
+        color: white;
+    }
+    
+    .social-btn.facebook {
+        background: #1877f2;
+    }
+    
+    .social-btn.twitter {
+        background: #1da1f2;
+    }
+    
+    .social-btn.linkedin {
+        background: #0077b5;
+    }
+    
+    .social-btn.whatsapp {
+        background: #25d366;
+    }
+    
+    @media (max-width: 768px) {
+        .score-circle {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .score-number {
+            font-size: 2.5rem;
+        }
+        
+        .score-max {
+            font-size: 1rem;
+        }
+        
+        .achievement-badge {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+    function shareToFacebook() {
+        const text = `I just completed the ITian Club Aptitude Quiz and scored {{ score }}/6! 🎉 Test your skills too!`;
+        const url = window.location.href;
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`, '_blank');
+    }
+    
+    function shareToTwitter() {
+        const text = `I just completed the ITian Club Aptitude Quiz and scored {{ score }}/6! 🎉 Test your skills too!`;
+        const url = window.location.href;
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    }
+    
+    function shareToLinkedIn() {
+        const text = `I just completed the ITian Club Aptitude Quiz and scored {{ score }}/6! Test your skills too!`;
+        const url = window.location.href;
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+    }
+    
+    function shareToWhatsApp() {
+        const text = `I just completed the ITian Club Aptitude Quiz and scored {{ score }}/6! 🎉 Test your skills too!`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+    
+    // Add confetti animation for high scores
+    {% if score >= 4 %}
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            createConfetti();
+        }, 1000);
+    });
+    
+    function createConfetti() {
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-10px';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'][Math.floor(Math.random() * 5)];
+            confetti.style.borderRadius = '50%';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.zIndex = '9999';
+            confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+    }
+    
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    {% endif %}
+</script>
+{% endblock %}
