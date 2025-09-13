@@ -31,17 +31,39 @@ class QuizTimer {
     setupElements() {
         this.timerDisplay = document.getElementById('timer');
         this.quizForm = document.getElementById('quizForm');
-
+        if (window.performance) {
+            if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+                if (localStorage.getItem('quiz_reloaded')) {
+                    localStorage.removeItem('quiz_reloaded');
+                    localStorage.removeItem('quiz_time_left');
+                    // this.handleTimeUp();
+                    //  this.quizForm.submit();
+                }else{
+                    localStorage.setItem('quiz_reloaded', 1);
+                    console.log("This page has been reloaded.");
+                }
+               
+            } else {
+                console.log("This page is not a reload (e.g., initial load, back/forward navigation).");
+            }
+        } else {
+            console.log("window.performance is not supported in this browser.");
+        }
         if (!this.timerDisplay || !this.quizForm) {
             console.warn('Timer elements not found');
             return;
         }
 
         // Read timer from data attribute (in seconds)
-        this.timeLeft = parseInt(this.quizForm.dataset.timer) || 300;
+        if (localStorage.getItem('quiz_time_left')) {
+            this.timeLeft = parseInt(localStorage.getItem('quiz_time_left'), 10);
+            console.log('Restored time from localStorage:', this.timeLeft);
+        } else {
+            this.timeLeft = parseInt(this.quizForm.dataset.timer) || 300;
+        }
         this.totalTime = this.timeLeft;
         this.endTime = Date.now() + this.timeLeft * 1000;
-            console.log(endTime,'this is endtime');
+            console.log(this.endTime,'this is endtime');
         console.log(`Timer initialized: ${this.timeLeft} seconds`);
     }
 
@@ -76,6 +98,8 @@ class QuizTimer {
 
         if (this.lastRenderedSecond !== remaining) {
             this.timeLeft = remaining;
+             localStorage.setItem('quiz_time_left', this.timeLeft);
+            console.log('this saved time', localStorage.getItem('quiz_time_left'));
             this.updateDisplay();
             this.checkWarnings();
             this.lastRenderedSecond = remaining;
@@ -160,31 +184,31 @@ checkWarnings() {
     }
 
     showWarning(message, type) {
-        if (this.timeLeft === this.warningThreshold || this.timeLeft === this.criticalThreshold) {
-            if (window.QuizApp && window.QuizApp.showAlert) {
-                window.QuizApp.showAlert(message, type);
-            } else {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-                alertDiv.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    min-width: 300px;
-                `;
-                alertDiv.innerHTML = `
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                `;
-                document.body.appendChild(alertDiv);
+        // if (this.timeLeft === this.warningThreshold || this.timeLeft === this.criticalThreshold) {
+        //     if (window.QuizApp && window.QuizApp.showAlert) {
+        //         window.QuizApp.showAlert(message, type);
+        //     } else {
+        //         const alertDiv = document.createElement('div');
+        //         alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        //         alertDiv.style.cssText = `
+        //             position: fixed;
+        //             top: 20px;
+        //             right: 20px;
+        //             z-index: 9999;
+        //             min-width: 300px;
+        //         `;
+        //         alertDiv.innerHTML = `
+        //             <i class="fas fa-exclamation-triangle me-2"></i>
+        //             ${message}
+        //             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        //         `;
+        //         document.body.appendChild(alertDiv);
 
-                setTimeout(() => {
-                    alertDiv.remove();
-                }, 3000);
-            }
-        }
+        //         setTimeout(() => {
+        //             alertDiv.remove();
+        //         }, 3000);
+        //     }
+        // }
     }
 
     handleTimeUp() {
