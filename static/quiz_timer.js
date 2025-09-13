@@ -36,8 +36,9 @@ class QuizTimer {
                 if (localStorage.getItem('quiz_reloaded')) {
                     localStorage.removeItem('quiz_reloaded');
                     localStorage.removeItem('quiz_time_left');
-                    // this.handleTimeUp();
-                    //  this.quizForm.submit();
+                    this.handleTimeUp();
+                    // use below function if you want faster
+                    //  this.quizForm.submit(); 
                 }else{
                     localStorage.setItem('quiz_reloaded', 1);
                     console.log("This page has been reloaded.");
