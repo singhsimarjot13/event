@@ -39,7 +39,40 @@ class QuizApp {
                 e.returnValue = 'Are you sure you want to leave? Your quiz progress will be lost.';
             }
         });
-
+        // fullscreen mode event listeners
+        const elem = document.documentElement;
+        this.openFullscreen=()=> {
+            if (elem.requestFullscreen) {
+                console.log("fullscrreen mode");
+                console.log(elem);
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        }
+        this.closeFullscreen=()=>{
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
+        }
+        let fullscreenBtn=document.querySelector('.fullscreen-mode-btn');
+        this.addEventListener(fullscreenBtn,'click',()=>{
+              this.openFullscreen();
+              this.isfullscreen=true;
+              document.querySelector('.fullscreenbox').style.display='none';
+        })
+        let nextbtn=document.getElementById('nextBtn');
+        this.addEventListener(nextbtn,'click',()=>{
+            if(this.isfullscreen==false){
+                this.openFullscreen();
+            }
+        })
         // Form submission events
         this.addEventListener(document, 'submit', (e) => {
             this.handleFormSubmission(e);
