@@ -3,6 +3,11 @@
 
 {% block content %}
 <div class="quiz-container">
+    <!-- quiz fullscreen box -->
+     <div class="fullscreenbox">
+        <p class="fullscreen-mode-text">The screen is going to go on fullscreen</p>
+        <button class='fullscreen-mode-btn'>ok</button>
+     </div>
     <!-- Quiz Header -->
     <div class="glass-card mb-4 fade-in-up">
         <div class="row align-items-center">
@@ -165,7 +170,39 @@
     .timer-container {
         text-align: center;
     }
-    
+    .fullscreen-mode-text{
+        color:black;
+        font-size:1.2rem;
+    }
+    .fullscreen-mode-btn{
+        background: var(--primary-blue);
+        border:none;
+        color:white;
+        padding:0.5rem 1rem;
+        border-radius:8px;
+        cursor:pointer;
+        font-size:1rem;
+        transition:background 0.3s ease;
+    }
+    .fullscreenbox{
+        border-radius: 7px;
+        padding: 20px;
+        position:fixed;
+        top:0;
+        left:40%;
+        
+        width:20%;
+        text-align: center;
+        background:white;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        z-index:2000;
+        color:black;
+        font-size:1.5rem;
+        display:block;
+    }
     .timer-display {
         background: rgba(17, 24, 39, 0.8);
         border-radius: 15px;
